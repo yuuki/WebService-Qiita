@@ -17,20 +17,24 @@ sub new {
 # Delegade method to Net::Qiita::Client object
 sub AUTOLOAD {
     my $method = our $AUTOLOAD;
+       $method =~ s/.*://g;
     my (@args) = @_;
 
     {
         no strict 'refs';
 
         *{$AUTOLOAD} = sub {
-            my $self = shift;
-            defined &{ $self->new->$method } || croak "no such method: $method";
-            $self->new->$method(@args);
-        }
+            my $class = shift;
+            my $client = $class->new;
+            defined $client->$method || croak "no such method: $method";
+            shift @args;
+            $client->$method(@args);
+        };
     }
-
     goto &$AUTOLOAD;
 }
+
+sub DESTROY {}
 
 1;
 __END__
