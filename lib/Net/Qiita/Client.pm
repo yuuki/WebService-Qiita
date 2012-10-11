@@ -3,12 +3,17 @@ use strict;
 use warnings;
 use utf8;
 
-use base qw(Net::Qiita::Client::Base);
+use base qw(
+    Net::Qiita::Client::Users
+    Net::Qiita::Client::Tags
+    Net::Qiita::Client::Items
+);
 
 sub new {
     my ($class, $options) = @_;
 
-    my $self = bless $options, $class;
+    $options ||= {};
+    my $self = bless $options, ref($class) || $class;
     if (! $options->{token} && $options->{url_name} && $options->{password}) {
         $self->_login($options);
     }
@@ -17,11 +22,12 @@ sub new {
 
 sub _login {
     my ($self, $args) = @_;
-    my $json = post('/auth', {
+
+    my $json = $self->post('/auth', {
         url_name => $args->{url_name},
         password => $args->{password},
     });
-    $self->token = $json->{token};
+    $self->token($json->{token});
 }
 
 1;
