@@ -16,19 +16,19 @@ sub new {
 
 # Delegade method to Net::Qiita::Client object
 sub AUTOLOAD {
-    my $method = our $AUTOLOAD;
-       $method =~ s/.*://g;
+    my $func = our $AUTOLOAD;
+       $func =~ s/.*://g;
     my (@args) = @_;
 
     {
         no strict 'refs';
 
         *{$AUTOLOAD} = sub {
-            my $class = shift;
+            my $class  = shift;
             my $client = $class->new;
-            defined $client->$method || croak "no such method: $method";
+            defined $client->can($func) || croak "no such func $func";
             shift @args;
-            $client->$method(@args);
+            $client->$func(@args);
         };
     }
     goto &$AUTOLOAD;
