@@ -42,6 +42,45 @@ subtest user_items => sub {
     };
 };
 
+subtest user_following_tags => sub {
+    my $data = file('t/data/user_following_tags')->slurp;
+    my $response = HTTP::Response->new(200);
+    $response->content($data);
+
+    my $data_arrayref = decode_json($data);
+
+    subtest class_method => sub {
+        Test::Mock::LWP::Conditional->stub_request(
+            api_endpoint('/users/y_uuki_/following_tags') => $response,
+        );
+        my $items = Net::Qiita->user_following_tags('y_uuki_');
+
+        is_deeply $items, $data_arrayref;
+
+        Test::Mock::LWP::Conditional->reset_all;
+    };
+};
+
+subtest user_following_users => sub {
+    my $data = file('t/data/user_following_users')->slurp;
+    my $response = HTTP::Response->new(200);
+    $response->content($data);
+
+    my $data_arrayref = decode_json($data);
+
+    subtest class_method => sub {
+        Test::Mock::LWP::Conditional->stub_request(
+            api_endpoint('/users/y_uuki_/following_users') => $response,
+        );
+        my $items = Net::Qiita->user_following_users('y_uuki_');
+
+        is_deeply $items, $data_arrayref;
+
+        Test::Mock::LWP::Conditional->reset_all;
+    };
+};
+
+
 subtest user_stocks => sub {
     my $data = file('t/data/user_stocks')->slurp;
     my $response = HTTP::Response->new(200);
@@ -80,15 +119,16 @@ subtest user => sub {
 
     my $data_arrayref = decode_json($data);
 
-    Test::Mock::LWP::Conditional->stub_request(
-        api_endpoint('/users/y_uuki_') => $response,
-    );
-
     subtest instance_method => sub {
+        Test::Mock::LWP::Conditional->stub_request(
+            api_endpoint('/user') => $response,
+        );
         my $client = client(token => 'auth');
-        my $items = $client->user('y_uuki_');
+        my $items = $client->user;
 
         is_deeply $items, $data_arrayref;
+
+        Test::Mock::LWP::Conditional->reset_all;
     };
 
     subtest class_method => sub {
@@ -98,9 +138,9 @@ subtest user => sub {
         my $items = Net::Qiita->user('y_uuki_');
 
         is_deeply $items, $data_arrayref;
-    };
 
-    Test::Mock::LWP::Conditional->reset_all;
+        Test::Mock::LWP::Conditional->reset_all;
+    };
 };
 
 done_testing;

@@ -8,6 +8,7 @@ use Carp qw(croak);
 
 use Net::Qiita::Client;
 
+
 sub new {
     my ($class, %options) = @_;
 

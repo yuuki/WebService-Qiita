@@ -12,6 +12,16 @@ sub user_items {
     $self->get($path, $params);
 }
 
+sub user_following_tags {
+    my ($self, $url_name, $params) = @_;
+    $self->get("/users/$url_name/following_tags", $params);
+}
+
+sub user_following_users {
+    my ($self, $url_name, $params) = @_;
+    $self->get("/users/$url_name/following_users", $params);
+}
+
 sub user_stocks {
     my ($self, $url_name, $params) = @_;
 
@@ -21,7 +31,9 @@ sub user_stocks {
 
 sub user {
     my ($self, $url_name) = @_;
-    $self->get("/users/$url_name");
+
+    my $path = defined $url_name ? "/users/$url_name" : '/user';
+    $self->get($path);
 }
 
 1;

@@ -65,7 +65,7 @@ sub _request {
     $request->content($uri->query);
 
     my $response = agent->request($request);
-    $response->is_error and croak _error_message($response);
+    croak _error_message($response) if $response->is_error || !$response->content;
 
     JSON::decode_json($response->content);
 }
@@ -76,7 +76,7 @@ sub _error_message {
     my $content = $response->content;
     if ($content) {
         my $json = JSON::decode_json($content);
-        $json->{error} and return $json->{error};
+        return $json->{error} if $json->{error};
     }
     my $req = $response->request;
     sprintf "%s %s: %d", $req->method, $req->url, $response->code;
