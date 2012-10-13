@@ -70,11 +70,6 @@ sub _request {
     JSON::decode_json($response->content);
 }
 
-sub _query {
-    my ($url, $params) = @_;
-
-}
-
 sub _error_message {
     my $response = shift;
 

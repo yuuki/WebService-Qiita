@@ -27,7 +27,7 @@ subtest token => sub {
     my $json = JSON::encode_json(+{url_name => 'y_uuki_', token => 'yoursecrettoken'});
     $response->content($json);
     Test::Mock::LWP::Conditional->stub_request(
-        Net::Qiita::Client::Base::ROOT_URL . "/api/v1/auth" => $response,
+        api_url("/auth") => $response,
     );
 
     my $client = Net::Qiita::Client->new({
