@@ -4,23 +4,33 @@ use Net::Qiita;
 
 use Test::More;
 use Test::Fatal;
-use Test::Mock::LWP::Conditional;
+use Test::Mock::Guard qw(mock_guard);
 
-subtest 'delegade' => sub {
-    my $ROOT_URL = Net::Qiita::Client::Base::ROOT_URL;
-    my $response = HTTP::Response->new(200);
-    Test::Mock::LWP::Conditional->stub_request(
-        "$ROOT_URL/user_items"  => $response,
-        "$ROOT_URL/user_stocks" => $response,
-        "$ROOT_URL/user"        => $response,
-    );
+use Carp qw(croak);
+use JSON qw(encode_json);
 
-    my $items = Net::Qiita->user_items;
-    ok $items;
-    $items = Net::Qiita->user_stocks;
-    ok $items;
-    $items = Net::Qiita->user;
-    ok $items;
+subtest delegade => sub {
+    my $stub_ref = sub { croak q(exists delegaded method) };
+
+    subtest users => sub {
+        my $user_mock_funcs = +{
+            user_items           => $stub_ref,
+            user_following_tags  => $stub_ref,
+            user_following_users => $stub_ref,
+            user_stocks          => $stub_ref,
+            user                 => $stub_ref,
+        };
+        my $mock = mock_guard 'Net::Qiita::Client::Users', $user_mock_funcs;
+
+        for (keys %$user_mock_funcs) {
+            like exception {Net::Qiita->$_; }, qr(exists delegaded method);
+        }
+
+        subtest undefined_method => sub {
+            like exception {Net::Qiita->nainai; }, qr(no such func);
+        }
+    };
+
 };
 
 
