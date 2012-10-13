@@ -8,7 +8,7 @@ use Test::Fatal;
 use Test::Mock::LWP::Conditional qw(stub_request);
 
 use HTTP::Response;
-use JSON qw(encode_json decode_json);
+use JSON qw(decode_json);
 use Path::Class qw(file);
 
 subtest user_items => sub {

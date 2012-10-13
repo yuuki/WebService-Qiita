@@ -31,6 +31,21 @@ subtest delegade => sub {
         }
     };
 
+    subtest tags => sub {
+        my $tag_mock_funcs = +{
+            tag_items  => $stub_ref,
+            tags       => $stub_ref,
+        };
+        my $mock = mock_guard 'Net::Qiita::Client::Tags', $tag_mock_funcs;
+
+        for (keys %$tag_mock_funcs) {
+            like exception {Net::Qiita->$_; }, qr(exists delegaded method);
+        }
+
+        subtest undefined_method => sub {
+            like exception {Net::Qiita->nainai; }, qr(no such func);
+        }
+    };
 };
 
 
