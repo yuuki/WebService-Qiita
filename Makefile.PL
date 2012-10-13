@@ -6,14 +6,18 @@ requires 'Exporter::Lite';
 requires 'HTTP::Request';
 requires 'JSON';
 requires 'LWP::UserAgent';
+requiest 'parent';  # for ver less than 5.10
 
 tests 't/*.t';
 author_tests 'xt';
 
 test_requires 'Test::More';
 test_requires 'Test::Fatal';
-test_requiest 'Test::Mock::LWP::Conditional';
-test_requiest 'Test::Mock::Guard';
+test_requires 'Test::Mock::LWP::Conditional';
+test_requires 'Test::Mock::Guard';
+
+test_requires 'Path::Class';
+test_requires 'YAML';
 
 auto_set_repository;
 auto_include;

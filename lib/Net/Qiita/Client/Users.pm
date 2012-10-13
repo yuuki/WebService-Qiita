@@ -3,7 +3,7 @@ use strict;
 use warnings;
 use utf8;
 
-use base qw(Net::Qiita::Client::Base);
+use parent qw(Net::Qiita::Client::Base);
 
 sub user_items {
     my ($self, $url_name, $params) = @_;

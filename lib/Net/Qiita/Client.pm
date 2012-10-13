@@ -3,7 +3,7 @@ use strict;
 use warnings;
 use utf8;
 
-use base qw(
+use parent qw(
     Net::Qiita::Client::Users
     Net::Qiita::Client::Tags
     Net::Qiita::Client::Items
