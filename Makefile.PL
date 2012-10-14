@@ -7,6 +7,7 @@ requires 'HTTP::Request';
 requires 'JSON';
 requires 'LWP::UserAgent';
 requiest 'parent';  # for ver less than 5.10
+requires 'URI';
 
 tests 't/*.t';
 author_tests 'xt';
@@ -17,7 +18,6 @@ test_requires 'Test::Mock::Guard';
 test_requires 'Test::Mock::LWP::Conditional';
 
 test_requires 'Path::Class';
-test_requires 'YAML';
 
 auto_set_repository;
 auto_include;

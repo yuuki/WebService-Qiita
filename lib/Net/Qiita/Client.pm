@@ -28,11 +28,11 @@ sub rate_limit {
 sub _login {
     my ($self, $args) = @_;
 
-    my $json = $self->post('/auth', {
+    my $info = $self->post('/auth', {
         url_name => $args->{url_name},
         password => $args->{password},
     });
-    $self->token($json->{token});
+    $self->token($info->{token});
 }
 
 1;

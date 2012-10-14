@@ -58,15 +58,15 @@ sub _request {
     my $url = ROOT_URL . PREFIX_PATH . $path;
     $params->{token} = $self->token if $self->token;
 
-    my $uri = URI->new($url);
-    my $request = HTTP::Request->new("$method" => $uri->as_string);
+    my $request = HTTP::Request->new("$method" => $url);
     $request->content_type('application/json');
-    $uri->query_form(%$params);
 
     if ($method eq 'GET' || $method eq 'DELETE') {
+        my $uri = URI->new($url);
+        $uri->query_form(%$params);
         $request->uri($uri->as_string);
     } elsif ($method eq 'POST' || $method eq 'PUT') {
-        $request->content($uri->query);
+        $request->content(JSON::encode_json $params);
     } else {
         croak "invalid http method: $method";
     }
