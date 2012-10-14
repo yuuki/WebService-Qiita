@@ -1,12 +1,13 @@
 use inc::Module::Install;
 name 'Net-Qiita';
+author 'Yuuki Tsubouchi <yuki.tsubo@gmail.com>';
 all_from 'lib/Net/Qiita.pm';
 
 requires 'Exporter::Lite';
 requires 'HTTP::Request';
 requires 'JSON';
 requires 'LWP::UserAgent';
-requiest 'parent';  # for ver less than 5.10
+requires 'parent';  # for ver less than 5.10
 requires 'URI';
 
 tests 't/*.t';
