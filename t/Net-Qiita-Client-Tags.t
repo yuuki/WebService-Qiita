@@ -20,10 +20,10 @@ subtest tag_items => sub {
     my $data_arrayref = decode_json($data);
 
     subtest instance_method => sub {
-        Test::Mock::LWP::Conditional->stub_request(
-            api_endpoint('/tags/perl/items') => $response,
-        );
         my $client = client(token => 'auth');
+        Test::Mock::LWP::Conditional->stub_request(
+            api_endpoint('/tags/perl/items?token=' . $client->token) => $response,
+        );
         my $items = $client->tag_items('perl');
 
         is_deeply $items, $data_arrayref;
@@ -50,23 +50,28 @@ subtest tags => sub {
 
     my $data_arrayref = decode_json($data);
 
-    Test::Mock::LWP::Conditional->stub_request(
-        api_endpoint('/tags') => $response,
-    );
-
     subtest instance_method => sub {
         my $client = client(token => 'auth');
+        Test::Mock::LWP::Conditional->stub_request(
+            api_endpoint('/tags?token=' . $client->token) => $response,
+        );
         my $items = $client->tags;
 
         is_deeply $items, $data_arrayref;
+
+        Test::Mock::LWP::Conditional->reset_all;
     };
 
     subtest class_method => sub {
+        Test::Mock::LWP::Conditional->stub_request(
+            api_endpoint('/tags') => $response,
+        );
         my $items = Net::Qiita->tags;
 
         is_deeply $items, $data_arrayref;
+
+        Test::Mock::LWP::Conditional->reset_all;
     };
-    Test::Mock::LWP::Conditional->reset_all;
 };
 
 done_testing;

@@ -19,10 +19,10 @@ subtest user_items => sub {
     my $data_arrayref = decode_json($data);
 
     subtest instance_method => sub {
-        Test::Mock::LWP::Conditional->stub_request(
-            api_endpoint('/items') => $response,
-        );
         my $client = client(token => 'auth');
+        Test::Mock::LWP::Conditional->stub_request(
+            api_endpoint('/items?token=' . $client->token) => $response,
+        );
         my $items = $client->user_items;
 
         is_deeply $items, $data_arrayref;
@@ -89,10 +89,10 @@ subtest user_stocks => sub {
     my $data_arrayref = decode_json($data);
 
     subtest instance_method => sub {
-        Test::Mock::LWP::Conditional->stub_request(
-            api_endpoint('/stocks') => $response,
-        );
         my $client = client(token => 'auth');
+        Test::Mock::LWP::Conditional->stub_request(
+            api_endpoint('/stocks?token=' . $client->token) => $response,
+        );
         my $items = $client->user_stocks;
 
         is_deeply $items, $data_arrayref;
@@ -120,10 +120,10 @@ subtest user => sub {
     my $data_arrayref = decode_json($data);
 
     subtest instance_method => sub {
-        Test::Mock::LWP::Conditional->stub_request(
-            api_endpoint('/user') => $response,
-        );
         my $client = client(token => 'auth');
+        Test::Mock::LWP::Conditional->stub_request(
+            api_endpoint('/user?token=' . $client->token) => $response,
+        );
         my $items = $client->user;
 
         is_deeply $items, $data_arrayref;
