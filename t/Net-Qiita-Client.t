@@ -1,5 +1,6 @@
 use lib lib => 't/lib' => glob 'modules/*/lib';
 use Net::Qiita::Test;
+use Net::Qiita;
 use Net::Qiita::Client;
 
 use Test::More;
@@ -8,6 +9,7 @@ use Test::Mock::LWP::Conditional;
 
 use HTTP::Response;
 use JSON;
+use Path::Class qw(file);
 
 subtest accessor => sub {
     my $client = Net::Qiita::Client->new({
@@ -40,5 +42,22 @@ subtest token => sub {
     is $client->token,    'yoursecrettoken';
 };
 
+subtest rate_limit => sub {
+    my $response = HTTP::Response->new(200);
+    my $data = file('t/data/rate_limit')->slurp;
+    $response->content($data);
+    my $data_arrayref = decode_json($data);
+
+    Test::Mock::LWP::Conditional->stub_request(
+        api_endpoint("/rate_limit") => $response,
+    );
+
+    my $limit = Net::Qiita->rate_limit;
+
+    is_deeply $limit, $data_arrayref;
+
+    Test::Mock::LWP::Conditional->reset_all;
+};
 
 done_testing;
+__END__

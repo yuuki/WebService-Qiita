@@ -12,6 +12,20 @@ use JSON qw(encode_json);
 subtest delegade => sub {
     my $stub_ref = sub { croak q(exists delegaded method) };
 
+    subtest client => sub {
+        my $client_mock_funcs = +{
+            rate_limit => $stub_ref,
+        };
+        my $mock = mock_guard 'Net::Qiita::Client', $client_mock_funcs;
+        for (keys %$client_mock_funcs) {
+            like exception {Net::Qiita->$_; }, qr(exists delegaded method);
+        }
+
+        subtest undefined_method => sub {
+            like exception {Net::Qiita->nainai; }, qr(no such func);
+        }
+    };
+
     subtest users => sub {
         my $user_mock_funcs = +{
             user_items           => $stub_ref,

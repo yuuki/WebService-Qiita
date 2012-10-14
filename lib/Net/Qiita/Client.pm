@@ -20,6 +20,11 @@ sub new {
     $self;
 }
 
+sub rate_limit {
+    my ($self, $params) = @_;
+    $self->get('/rate_limit', $params);
+}
+
 sub _login {
     my ($self, $args) = @_;
 
