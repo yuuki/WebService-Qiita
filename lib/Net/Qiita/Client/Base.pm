@@ -10,6 +10,7 @@ use HTTP::Response;
 use URI;
 
 use Class::Accessor::Lite (
+    new => 1,
     rw => [qw(
         url_name
         password
@@ -61,6 +62,7 @@ sub _request {
     my $request = HTTP::Request->new("$method" => $uri->as_string);
     $request->content_type('application/json');
     $uri->query_form(%$params);
+
     if ($method eq 'GET' || $method eq 'DELETE') {
         $request->uri($uri->as_string);
     } elsif ($method eq 'POST' || $method eq 'PUT') {
@@ -68,6 +70,7 @@ sub _request {
     } else {
         croak "invalid http method: $method";
     }
+
     my $response = agent->request($request);
     croak _error_message($response, $method, $url) if $response->is_error;
 
@@ -75,7 +78,7 @@ sub _request {
 }
 
 sub _error_message {
-    my ($response, $method, $url) = shift;
+    my ($response, $method, $url) = @_;
 
     my $content = $response->content;
     if ($content) {
