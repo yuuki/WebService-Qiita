@@ -9,3 +9,7 @@ Makefile.old
 nytprof.out
 MANIFEST.bak
 *.sw[po]
+examples
+README
+MYMETA.yml
+MYMETA.json
