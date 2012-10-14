@@ -18,6 +18,7 @@ test_requires 'Test::Fatal';
 test_requires 'Test::Mock::Guard';
 test_requires 'Test::Mock::LWP::Conditional';
 
+test_requires 'HTTP::Response';
 test_requires 'Path::Class';
 
 auto_set_repository;
