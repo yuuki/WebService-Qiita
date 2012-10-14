@@ -42,7 +42,7 @@ __END__
 
 =head1 NAME
 
-Net::Qiita - A wrapper module for Qiita API
+Net::Qiita - Perl wrapper for the Qiita API
 
 =head1 SYNOPSIS
 
@@ -53,7 +53,7 @@ Net::Qiita - A wrapper module for Qiita API
   my $tag_items = Net::Qiita->tag_items('perl');
 
   my $item_uuid = '1234567890abcdefg';
-  my $markdown_content = Qiita->item(item_uuid);
+  my $markdown_content = Net::Qiita->item(item_uuid);
 
   my $client = Net::Qiita->new(
     url_name => 'y_uuki_',
@@ -64,7 +64,7 @@ Net::Qiita - A wrapper module for Qiita API
     token => 'myauthtoken',
   );
 
-  $user_items = client->user_items;
+  $user_items = $client->user_items;
 
 
 =head1 DESCRIPTION
