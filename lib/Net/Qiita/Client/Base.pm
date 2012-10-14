@@ -58,28 +58,31 @@ sub _request {
     $params->{token} = $self->token if $self->token;
 
     my $uri = URI->new($url);
-    my $request = HTTP::Request->new($method => $uri->as_string);
+    my $request = HTTP::Request->new("$method" => $uri->as_string);
     $request->content_type('application/json');
     $uri->query_form(%$params);
-    $uri->query;
-    $request->content($uri->query);
-
+    if ($method eq 'GET' || $method eq 'DELETE') {
+        $request->uri($uri->as_string);
+    } elsif ($method eq 'POST' || $method eq 'PUT') {
+        $request->content($uri->query);
+    } else {
+        croak "invalid http method: $method";
+    }
     my $response = agent->request($request);
-    croak _error_message($response) if $response->is_error || !$response->content;
+    croak _error_message($response, $method, $url) if $response->is_error;
 
-    JSON::decode_json($response->content);
+    $response->content ? JSON::decode_json($response->content) : "";
 }
 
 sub _error_message {
-    my $response = shift;
+    my ($response, $method, $url) = shift;
 
     my $content = $response->content;
     if ($content) {
         my $json = JSON::decode_json($content);
         return $json->{error} if $json->{error};
     }
-    my $req = $response->request;
-    sprintf "%s %s: %d", $req->method, $req->url, $response->code;
+    sprintf "%s %s: %d", $method, $url, $response->code;
 }
 
 1;
