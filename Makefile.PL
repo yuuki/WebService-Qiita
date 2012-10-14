@@ -6,7 +6,7 @@ all_from 'lib/Net/Qiita.pm';
 requires 'Exporter::Lite';
 requires 'HTTP::Request';
 requires 'JSON';
-requires 'LWP::UserAgent';
+requires 'LWP';
 requires 'parent';  # for ver less than 5.10
 requires 'URI';
 
