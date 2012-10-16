@@ -82,8 +82,8 @@ sub _error_message {
 
     my $content = $response->content;
     if ($content) {
-        my $json = JSON::decode_json($content);
-        return $json->{error} if $json->{error};
+        my $json = eval { JSON::decode_json($content) };
+        return $json->{error} if $json && $json->{error};
     }
     sprintf "%s %s: %d", $method, $url, $response->code;
 }
