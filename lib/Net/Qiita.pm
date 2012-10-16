@@ -2,7 +2,7 @@ package Net::Qiita;
 use strict;
 use warnings;
 use utf8;
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 use Carp qw(croak);
 
