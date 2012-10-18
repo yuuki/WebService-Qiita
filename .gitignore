@@ -13,3 +13,4 @@ examples
 README
 MYMETA.yml
 MYMETA.json
+t/00-dependencies.t
