@@ -1,7 +1,7 @@
 use inc::Module::Install;
-name 'Net-Qiita';
+name 'WebService-Qiita';
 author 'Yuuki Tsubouchi <yuki.tsubo@gmail.com>';
-all_from 'lib/Net/Qiita.pm';
+all_from 'lib/WebService/Qiita.pm';
 
 requires 'Class::Accessor::Lite';
 requires 'HTTP::Request';

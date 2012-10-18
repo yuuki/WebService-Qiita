@@ -1,7 +1,7 @@
 use lib lib => 't/lib' => glob 'modules/*/lib';
-use Net::Qiita::Test qw(client api_endpoint);
-use Net::Qiita;
-use Net::Qiita::Client::Users;
+use WebService::Qiita::Test qw(client api_endpoint);
+use WebService::Qiita;
+use WebService::Qiita::Client::Users;
 
 use Test::More;
 use Test::Fatal;
@@ -104,7 +104,7 @@ subtest item => sub {
         Test::Mock::LWP::Conditional->stub_request(
             api_endpoint("/items/$uuid") => $response,
         );
-        my $items = Net::Qiita->item($uuid);
+        my $items = WebService::Qiita->item($uuid);
 
         is_deeply $items, $data_arrayref;
 
@@ -134,7 +134,7 @@ subtest search_item => sub {
         Test::Mock::LWP::Conditional->stub_request(
             api_endpoint("/search?q=$query") => $response,
         );
-        my $items = Net::Qiita->search_items($query);
+        my $items = WebService::Qiita->search_items($query);
 
         is_deeply $items, $data_arrayref;
     };

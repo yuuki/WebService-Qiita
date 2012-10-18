@@ -1,12 +1,12 @@
-package Net::Qiita::Client;
+package WebService::Qiita::Client;
 use strict;
 use warnings;
 use utf8;
 
 use parent qw(
-    Net::Qiita::Client::Users
-    Net::Qiita::Client::Tags
-    Net::Qiita::Client::Items
+    WebService::Qiita::Client::Users
+    WebService::Qiita::Client::Tags
+    WebService::Qiita::Client::Items
 );
 
 sub new {

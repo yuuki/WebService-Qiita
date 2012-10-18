@@ -1,9 +1,9 @@
-package Net::Qiita::Client::Tags;
+package WebService::Qiita::Client::Tags;
 use strict;
 use warnings;
 use utf8;
 
-use parent qw(Net::Qiita::Client::Base);
+use parent qw(WebService::Qiita::Client::Base);
 
 sub tag_items {
     my ($self, $url_name, $params) = @_;

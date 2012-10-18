@@ -1,9 +1,9 @@
-package Net::Qiita::Client::Users;
+package WebService::Qiita::Client::Users;
 use strict;
 use warnings;
 use utf8;
 
-use parent qw(Net::Qiita::Client::Base);
+use parent qw(WebService::Qiita::Client::Base);
 
 sub user_items {
     my ($self, $url_name, $params) = @_;

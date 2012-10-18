@@ -1,7 +1,7 @@
 use lib lib => 't/lib' => glob 'modules/*/lib';
-use Net::Qiita::Test;
-use Net::Qiita;
-use Net::Qiita::Client;
+use WebService::Qiita::Test;
+use WebService::Qiita;
+use WebService::Qiita::Client;
 
 use Test::More;
 use Test::Fatal;
@@ -12,7 +12,7 @@ use JSON;
 use Path::Class qw(file);
 
 subtest accessor => sub {
-    my $client = Net::Qiita::Client->new({
+    my $client = WebService::Qiita::Client->new({
         url_name => 'y_uuki_',
         password => 'mysecret',
         token    => 'authtoken',
@@ -21,7 +21,7 @@ subtest accessor => sub {
     is $client->url_name, 'y_uuki_';
     is $client->password, 'mysecret';
     is $client->token,    'authtoken';
-    isa_ok $client, 'Net::Qiita::Client::Base';
+    isa_ok $client, 'WebService::Qiita::Client::Base';
 };
 
 subtest token => sub {
@@ -32,7 +32,7 @@ subtest token => sub {
         api_endpoint("/auth") => $response,
     );
 
-    my $client = Net::Qiita::Client->new({
+    my $client = WebService::Qiita::Client->new({
         url_name => 'y_uuki_',
         password => 'mysecret',
     });
@@ -52,7 +52,7 @@ subtest rate_limit => sub {
         api_endpoint("/rate_limit") => $response,
     );
 
-    my $limit = Net::Qiita->rate_limit;
+    my $limit = WebService::Qiita->rate_limit;
 
     is_deeply $limit, $data_arrayref;
 

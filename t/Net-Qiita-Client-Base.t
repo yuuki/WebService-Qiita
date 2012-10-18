@@ -1,6 +1,6 @@
 use lib lib => 't/lib' => glob 'modules/*/lib';
-use Net::Qiita::Test;
-use Net::Qiita::Client::Base;
+use WebService::Qiita::Test;
+use WebService::Qiita::Client::Base;
 
 use Test::More;
 use Test::Fatal;
@@ -8,7 +8,7 @@ use Test::Mock::LWP::Conditional;
 use JSON qw(encode_json);
 
 subtest accessor => sub {
-    my $client = Net::Qiita::Client::Base->new({
+    my $client = WebService::Qiita::Client::Base->new({
         url_name => 'y_uuki_',
         password => 'mysecret',
         token    => 'authtoken',
@@ -20,14 +20,14 @@ subtest accessor => sub {
 };
 
 subtest agent => sub {
-    my $client = Net::Qiita::Client::Base->new;
+    my $client = WebService::Qiita::Client::Base->new;
     my $agent = $client->agent;
 
     isa_ok $agent, 'LWP::UserAgent';
 };
 
 subtest request => sub {
-    my $client = Net::Qiita::Client::Base->new;
+    my $client = WebService::Qiita::Client::Base->new;
 
     subtest normal => sub {
         my $response = HTTP::Response->new(200);
