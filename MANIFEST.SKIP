@@ -21,3 +21,6 @@
 \.sw[po]$
 ^examples
 \.shipit.*
+^README.md$
+^\.gitignore$
+^t/00-dependencies.t$
