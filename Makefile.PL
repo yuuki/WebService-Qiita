@@ -10,6 +10,11 @@ requires 'LWP::UserAgent';
 requires 'parent';  # for ver less than 5.10
 requires 'URI';
 
+# for script
+requires Encode;
+requires 'Getopt::Long';
+requires 'Path::Class';
+
 tests 't/*.t';
 author_tests 'xt';
 
@@ -22,6 +27,7 @@ test_requires 'Exporter::Lite';
 test_requires 'HTTP::Response';
 test_requires 'Path::Class';
 
+install_script 'script/qiita';
 auto_include;
 auto_set_repository;
 WriteAll;
