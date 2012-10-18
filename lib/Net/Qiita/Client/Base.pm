@@ -6,7 +6,7 @@ use utf8;
 use Carp qw(croak);
 use LWP::UserAgent;
 use JSON;
-use HTTP::Response;
+use HTTP::Request;
 use URI;
 
 use Class::Accessor::Lite (
