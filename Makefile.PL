@@ -11,8 +11,8 @@ requires 'parent';  # for ver less than 5.10
 requires 'URI';
 
 # for script
-requires Encode;
-requires 'Getopt::Long';
+requires 'Encode';
+requires 'Getopt::Compact::WithCmd';
 requires 'Path::Class';
 
 tests 't/*.t';

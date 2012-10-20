@@ -4,10 +4,13 @@ use strict;
 use warnings;
 
 use Encode;
-use Getopt::Long;
+use Getopt::Compact::WithCmd;
 use Path::Class;
 
+use WebService::Qiita;
 use WebService::Qiita::Client;
+
+our $VERSION = $WebService::Qiita::VERSION;
 
 sub new {
     my $class = shift;
@@ -17,11 +20,13 @@ sub new {
     chomp for (@$lines);
 
     bless {
-        argv          => [],
         client        => undef,
         auth_filename => $filename,
         auth_file     => $lines,
         command       => {},
+        opts          => {},
+        argv          => [],
+        is_version    => 0,
     }, $class;
 }
 
@@ -30,54 +35,63 @@ sub parse_options {
 
     push @ARGV, @_;
 
-    Getopt::Long::Configure("bundling");
-    Getopt::Long::GetOptions(
-        'h|help'    => sub { $self->{action} = 'show_help' },
-        'v|version' => sub { $self->{action} = 'show_version' },
-        'me=s',     => \$self->{command}->{me},
+    my $go = Getopt::Compact::WithCmd->new(
+        name    => 'qiita',
+        version => $VERSION,
+        global_struct => [
+           [ [qw(v version)], 'Displays version', '!', \$self->{is_version} ],
+        ],
+        command_struct => {
+            search => {
+                options => [
+                    [ [qw(stocked s)], 'from your stocked items', '!', undef],
+                ],
+                args => 'query',
+                desc => 'Shows search results',
+            },
+            me => {
+                desc => 'Shows your info',
+            },
+        },
     );
 
     # TODO
     # --no-auth
     # --relogin
 
-    $self->{argv} = \@ARGV;
+    $self->{opts}    = $go->opts;
+    $self->{command} = $go->command;
+    $self->{argv}    = \@ARGV;
+
 }
 
 sub run {
     my $self = shift;
 
-
-    if (my $action = $self->{action}) {
-        $self->$action() and return 1;
+    if ($self->{is_version}) {
+        $self->show_version and return 0;
     }
 
     $self->is_loggedin or $self->login;
     $self->setup_client;
 
-    for my $command (@{ $self->{argv} }) {
-        if ($command eq 'me') {
-            $self->dump_me and return 1;
-        }
+    my $command = $self->{command} or diag('no specified subcommand') and return 1;
+    if ($command eq 'me') {
+        $self->dump_me;
+    }
+    elsif ($command eq 'search') {
+        $self->dump_search(join ' ', @ARGV);
     }
 
+    return 0;
 }
 
-sub show_help {
+sub show_version {
     my $self = shift;
-
-    print <<HELP;
-Usage: qiita [--version] [--help] <command> [<args>]
-
-Options:
-  -v,--version              Displays software version
-  -h,--help                 Displays help
-
-Commands:
-  search                    Shows search results
-  me                        Shows your info
-HELP
-
+    print <<VER;
+WebService::Qiita::CLI
+Version: $VERSION
+VER
     return 1;
 }
 
@@ -86,7 +100,7 @@ sub is_loggedin {
 
     return 0 unless $self->{auth_file};
     my $lines = $self->{auth_file};
-    return ($lines->[0] =~ /[0-9a-zA-Z_\-@]+/ and $lines->[1] =~ /[0-9a-z]+/);
+    $lines->[0] =~ /[0-9a-zA-Z_\-@]+/ and $lines->[1] =~ /[0-9a-z]+/;
 }
 
 sub login {
@@ -119,16 +133,22 @@ sub setup_client {
     });
 }
 
+sub filter_utf8 {
+    my $hash = $_[0];
+    for (keys %$hash) {
+        $hash->{$_} = defined $hash->{$_} ? $hash->{$_} : '';
+        if (utf8::is_utf8($hash->{$_})) {
+            $hash->{$_} = Encode::encode_utf8($hash->{$_});
+        }
+    }
+}
+
 sub dump_me {
     my $self = shift;
 
     my $me = $self->{client}->user;
-    for (keys %$me) {
-        $me->{$_} = defined $me->{$_} ? $me->{$_} : '';
-        if (utf8::is_utf8($me->{$_})) {
-            $me->{$_} = Encode::encode_utf8($me->{$_});
-        }
-    }
+    filter_utf8($me);
+
     print <<ME;
 name:  $me->{name}
 id:    $me->{url_name}
@@ -147,6 +167,38 @@ GitHub:   $me->{github}
 Facebook: $me->{facebook}
 Linkedin: $me->{linkedin}
 ME
+    return 1;
+}
+
+sub dump_search {
+    my ($self, $query) = @_;
+
+    unless ($query) {
+        print STDERR "No given query\n";
+        return 1;
+    }
+    my $items = $self->{client}->search_items($query);
+    filter_utf8($_) for (@$items);
+
+    for my $item (@$items) {
+        my $tags_str = $item->{tag} ? join ' ', @{ $item->{tags} } : '';
+
+        print <<SEARCH;
+Author:  $item->{user}->{name}
+Title:   $item->{title}
+Content:    $item->{body}
+
+$item->{updated_at_inwords}
+$tags_str
+Stock count: $item->{stock_count}
+SEARCH
+    }
+    return 1;
+}
+
+sub diag {
+    my $msg = shift;
+    print STDERR "$msg\n";
     return 1;
 }
 
