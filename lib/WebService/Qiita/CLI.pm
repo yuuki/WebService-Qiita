@@ -3,7 +3,6 @@ use utf8;
 use strict;
 use warnings;
 
-use Encode;
 use Getopt::Compact::WithCmd;
 use Path::Class;
 
@@ -42,19 +41,25 @@ sub parse_options {
            [ [qw(v version)], 'Displays version', '!', \$self->{is_version} ],
         ],
         command_struct => {
+            me => {
+                options => [
+                    [ [qw(items i)], 'with your item list', '!', undef ],
+                ],
+                desc => 'Shows your info',
+            },
+            user => {
+                options => [
+                    [ [qw(items i)], 'with user item list', '!', undef ],
+                ],
+                args => 'username',
+                desc => 'Shows user info',
+            },
             search => {
                 options => [
                     [ [qw(stocked s)], 'from your stocked items', '!', undef],
                 ],
                 args => 'query',
                 desc => 'Shows search results',
-            },
-            me => {
-                desc => 'Shows your info',
-            },
-            user => {
-                args => 'username',
-                desc => 'Shows user info',
             },
         },
     );
@@ -79,18 +84,37 @@ sub run {
     $self->is_loggedin or $self->login;
     $self->setup_client;
 
-    my $command = $self->{command} or diag('no specified subcommand') and return 1;
+    my $command = $self->{command}
+        or diag('no specified subcommand') and return 1;
     if ($command eq 'me') {
-        my $me = $self->{client}->user;
-        $self->dump_user($me);
+        if ($self->{opts}->{items}) {
+            my $items = $self->{client}->user_items;
+            $self->dump_items($items);
+        }
+        else {
+            my $me = $self->{client}->user;
+            $self->dump_user($me);
+        }
     }
     elsif ($command eq 'user') {
         my $url_name = shift @ARGV;
-        my $user = $self->{client}->user($url_name);
-        $self->dump_user($user);
+        if ($self->{opts}->{items}) {
+            my $items = $self->{client}->user_items($url_name);
+            $self->dump_items($items);
+        }
+        else {
+            my $user = $self->{client}->user($url_name);
+            $self->dump_user($user);
+        }
     }
     elsif ($command eq 'search') {
-        $self->dump_search(join ' ', @ARGV);
+        my $query = join ' ', @ARGV;
+        unless ($query) {
+            print STDERR "No given query\n";
+            return 1;
+        }
+        my $items = $self->{client}->search_items($query);
+        $self->dump_items($items);
     }
     else {
         diag("no such command $command") and return 1;
@@ -146,20 +170,10 @@ sub setup_client {
     });
 }
 
-sub filter_utf8 {
-    my $hash = $_[0];
-    for (keys %$hash) {
-        $hash->{$_} = defined $hash->{$_} ? $hash->{$_} : '';
-        if (utf8::is_utf8($hash->{$_})) {
-            $hash->{$_} = Encode::encode_utf8($hash->{$_});
-        }
-    }
-}
-
 sub dump_user {
     my ($self, $user) = @_;
 
-    filter_utf8($user);
+    no warnings 'utf8';
 
     print <<USER;
 user:  $user->{name}
@@ -182,28 +196,25 @@ USER
     return 1;
 }
 
-sub dump_search {
-    my ($self, $query) = @_;
-
-    unless ($query) {
-        print STDERR "No given query\n";
-        return 1;
-    }
-    my $items = $self->{client}->search_items($query);
-    filter_utf8($_) for (@$items);
+sub dump_items {
+    my ($self, $items) = @_;
 
     for my $item (@$items) {
-        my $tags_str = $item->{tag} ? join ' ', @{ $item->{tags} } : '';
+        my $tags_str = $item->{tags} ?
+            join(' ', map {$_->{name}} @{ $item->{tags} }) : '';
 
-        print <<SEARCH;
+        no warnings 'utf8';
+
+        print <<ITEM;
 Author:  $item->{user}->{name}
 Title:   $item->{title}
-Content:    $item->{body}
+Content:
+$item->{body}
 
-$item->{updated_at_inwords}
-$tags_str
+$item->{updated_at_in_words}
+Tags: $tags_str
 Stock count: $item->{stock_count}
-SEARCH
+ITEM
     }
     return 1;
 }
