@@ -1,7 +1,7 @@
 use lib lib => 't/lib' => glob 'modules/*/lib';
-use Net::Qiita::Test qw(client api_endpoint);
-use Net::Qiita;
-use Net::Qiita::Client::Tags;
+use WebService::Qiita::Test qw(client api_endpoint);
+use WebService::Qiita;
+use WebService::Qiita::Client::Tags;
 
 use Test::More;
 use Test::Fatal;
@@ -35,7 +35,7 @@ subtest tag_items => sub {
         Test::Mock::LWP::Conditional->stub_request(
             api_endpoint('/tags/perl/items') => $response,
         );
-        my $items = Net::Qiita->tag_items('perl');
+        my $items = WebService::Qiita->tag_items('perl');
 
         is_deeply $items, $data_arrayref;
 
@@ -66,7 +66,7 @@ subtest tags => sub {
         Test::Mock::LWP::Conditional->stub_request(
             api_endpoint('/tags') => $response,
         );
-        my $items = Net::Qiita->tags;
+        my $items = WebService::Qiita->tags;
 
         is_deeply $items, $data_arrayref;
 

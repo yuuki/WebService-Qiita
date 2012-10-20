@@ -1,6 +1,6 @@
-# Net::Qiita
+# WebService::Qiita
 
-Net::Qiita is a simple Perl wrapper for the Qiita API v1.
+WebService::Qiita is a simple Perl wrapper for the Qiita API v1.
 
 Qiita API documentaion here.
 
@@ -8,24 +8,24 @@ http://qiita.com/docs
 
 
 ## SYNOPSIS
-Net::Qiita interface is very similer to the publc Ruby wrapper (https://github.com/yaotti/qiita-rb).
+WebService::Qiita interface is very similer to the publc Ruby wrapper (https://github.com/yaotti/qiita-rb).
 
 ```perl
-use Net::Qiita;
+use WebService::Qiita;
 
-my $user_items = Net::Qiita->user_items('y_uuki_');
+my $user_items = WebService::Qiita->user_items('y_uuki_');
 
-my $tag_items = Net::Qiita->tag_items('perl');
+my $tag_items = WebService::Qiita->tag_items('perl');
 
 my $item_uuid = '1234567890abcdefg';
-my $markdown_content = Net::Qiita->item(item_uuid);
+my $markdown_content = WebService::Qiita->item(item_uuid);
 
-my $client = Net::Qiita->new(
+my $client = WebService::Qiita->new(
   url_name => 'y_uuki_',
   password => 'mysecret',
 );
 # or
-$client = Net::Qiita->new(
+$client = WebService::Qiita->new(
   token => 'myauthtoken',
 );
 

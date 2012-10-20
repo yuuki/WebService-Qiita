@@ -1,7 +1,7 @@
 use lib lib => 't/lib' => glob 'modules/*/lib';
-use Net::Qiita::Test qw(client api_endpoint);
-use Net::Qiita;
-use Net::Qiita::Client::Users;
+use WebService::Qiita::Test qw(client api_endpoint);
+use WebService::Qiita;
+use WebService::Qiita::Client::Users;
 
 use Test::More;
 use Test::Fatal;
@@ -34,7 +34,7 @@ subtest user_items => sub {
         Test::Mock::LWP::Conditional->stub_request(
             api_endpoint('/users/y_uuki_/items') => $response,
         );
-        my $items = Net::Qiita->user_items('y_uuki_');
+        my $items = WebService::Qiita->user_items('y_uuki_');
 
         is_deeply $items, $data_arrayref;
 
@@ -53,7 +53,7 @@ subtest user_following_tags => sub {
         Test::Mock::LWP::Conditional->stub_request(
             api_endpoint('/users/y_uuki_/following_tags') => $response,
         );
-        my $items = Net::Qiita->user_following_tags('y_uuki_');
+        my $items = WebService::Qiita->user_following_tags('y_uuki_');
 
         is_deeply $items, $data_arrayref;
 
@@ -72,7 +72,7 @@ subtest user_following_users => sub {
         Test::Mock::LWP::Conditional->stub_request(
             api_endpoint('/users/y_uuki_/following_users') => $response,
         );
-        my $items = Net::Qiita->user_following_users('y_uuki_');
+        my $items = WebService::Qiita->user_following_users('y_uuki_');
 
         is_deeply $items, $data_arrayref;
 
@@ -104,7 +104,7 @@ subtest user_stocks => sub {
         Test::Mock::LWP::Conditional->stub_request(
             api_endpoint('/users/y_uuki_/stocks') => $response,
         );
-        my $items = Net::Qiita->user_stocks('y_uuki_');
+        my $items = WebService::Qiita->user_stocks('y_uuki_');
 
         is_deeply $items, $data_arrayref;
 
@@ -135,7 +135,7 @@ subtest user => sub {
         Test::Mock::LWP::Conditional->stub_request(
             api_endpoint('/users/y_uuki_') => $response,
         );
-        my $items = Net::Qiita->user('y_uuki_');
+        my $items = WebService::Qiita->user('y_uuki_');
 
         is_deeply $items, $data_arrayref;
 

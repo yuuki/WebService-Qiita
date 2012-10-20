@@ -1,10 +1,10 @@
-package Net::Qiita::Test;
+package WebService::Qiita::Test;
 use strict;
 use warnings;
 use utf8;
 use Exporter::Lite;
 
-use Net::Qiita::Client;
+use WebService::Qiita::Client;
 
 our @EXPORT = qw(client api_endpoint);
 
@@ -26,7 +26,7 @@ sub import {
 
 sub client {
     my (%args) = @_;
-    my $client = Net::Qiita::Client->new({
+    my $client = WebService::Qiita::Client->new({
         url_name => $args{url_name} || 'y_uuki_',
         password => $args{password} || 'mysecret',
         token    => $args{token}    || 'authtoken',
@@ -36,7 +36,7 @@ sub client {
 
 sub api_endpoint {
     my ($path) = @_;
-    Net::Qiita::Client::Base::ROOT_URL . "/api/v1" . $path;
+    WebService::Qiita::Client::Base::ROOT_URL . "/api/v1" . $path;
 }
 
 

@@ -1,4 +1,4 @@
-package Net::Qiita::Client::Base;
+package WebService::Qiita::Client::Base;
 use strict;
 use warnings;
 use utf8;

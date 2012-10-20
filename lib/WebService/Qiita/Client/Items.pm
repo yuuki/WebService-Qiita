@@ -1,9 +1,9 @@
-package Net::Qiita::Client::Items;
+package WebService::Qiita::Client::Items;
 use strict;
 use warnings;
 use utf8;
 
-use parent qw(Net::Qiita::Client::Base);
+use parent qw(WebService::Qiita::Client::Base);
 
 sub post_item {
     my ($self, $params) = @_;

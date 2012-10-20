@@ -1,4 +1,4 @@
-package Net::Qiita;
+package WebService::Qiita;
 use strict;
 use warnings;
 use utf8;
@@ -6,16 +6,16 @@ our $VERSION = '0.04';
 
 use Carp qw(croak);
 
-use Net::Qiita::Client;
+use WebService::Qiita::Client;
 
 
 sub new {
     my ($class, %options) = @_;
 
-    Net::Qiita::Client->new(\%options);
+    WebService::Qiita::Client->new(\%options);
 }
 
-# Delegade method to Net::Qiita::Client object
+# Delegade method to WebService::Qiita::Client object
 sub AUTOLOAD {
     my $func = our $AUTOLOAD;
        $func =~ s/.*://g;
@@ -42,25 +42,25 @@ __END__
 
 =head1 NAME
 
-Net::Qiita - Perl wrapper for the Qiita API
+WebService::Qiita - Perl wrapper for the Qiita API
 
 =head1 SYNOPSIS
 
-  use Net::Qiita;
+  use WebService::Qiita;
 
-  my $user_items = Net::Qiita->user_items('y_uuki_');
+  my $user_items = WebService::Qiita->user_items('y_uuki_');
 
-  my $tag_items = Net::Qiita->tag_items('perl');
+  my $tag_items = WebService::Qiita->tag_items('perl');
 
   my $item_uuid = '1234567890abcdefg';
-  my $markdown_content = Net::Qiita->item(item_uuid);
+  my $markdown_content = WebService::Qiita->item(item_uuid);
 
-  my $client = Net::Qiita->new(
+  my $client = WebService::Qiita->new(
     url_name => 'y_uuki_',
     password => 'mysecret',
   );
   # or
-  $client = Net::Qiita->new(
+  $client = WebService::Qiita->new(
     token => 'myauthtoken',
   );
 
@@ -69,7 +69,7 @@ Net::Qiita - Perl wrapper for the Qiita API
 
 =head1 DESCRIPTION
 
-Net::Qiita is a wrapper for Qiita API.
+WebService::Qiita is a wrapper for Qiita API.
 
 =head1 AUTHOR
 

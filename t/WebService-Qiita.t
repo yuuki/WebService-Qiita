@@ -1,6 +1,6 @@
 use lib lib => 't/lib' => glob 'modules/*/lib';
-use Net::Qiita::Test;
-use Net::Qiita;
+use WebService::Qiita::Test;
+use WebService::Qiita;
 
 use Test::More;
 use Test::Fatal;
@@ -16,13 +16,13 @@ subtest delegade => sub {
         my $client_mock_funcs = +{
             rate_limit => $stub_ref,
         };
-        my $mock = mock_guard 'Net::Qiita::Client', $client_mock_funcs;
+        my $mock = mock_guard 'WebService::Qiita::Client', $client_mock_funcs;
         for (keys %$client_mock_funcs) {
-            like exception {Net::Qiita->$_; }, qr(exists delegaded method);
+            like exception {WebService::Qiita->$_; }, qr(exists delegaded method);
         }
 
         subtest undefined_method => sub {
-            like exception {Net::Qiita->nainai; }, qr(no such func);
+            like exception {WebService::Qiita->nainai; }, qr(no such func);
         }
     };
 
@@ -34,14 +34,14 @@ subtest delegade => sub {
             user_stocks          => $stub_ref,
             user                 => $stub_ref,
         };
-        my $mock = mock_guard 'Net::Qiita::Client::Users', $user_mock_funcs;
+        my $mock = mock_guard 'WebService::Qiita::Client::Users', $user_mock_funcs;
 
         for (keys %$user_mock_funcs) {
-            like exception {Net::Qiita->$_; }, qr(exists delegaded method);
+            like exception {WebService::Qiita->$_; }, qr(exists delegaded method);
         }
 
         subtest undefined_method => sub {
-            like exception {Net::Qiita->nainai; }, qr(no such func);
+            like exception {WebService::Qiita->nainai; }, qr(no such func);
         }
     };
 
@@ -50,14 +50,14 @@ subtest delegade => sub {
             tag_items  => $stub_ref,
             tags       => $stub_ref,
         };
-        my $mock = mock_guard 'Net::Qiita::Client::Tags', $tag_mock_funcs;
+        my $mock = mock_guard 'WebService::Qiita::Client::Tags', $tag_mock_funcs;
 
         for (keys %$tag_mock_funcs) {
-            like exception {Net::Qiita->$_; }, qr(exists delegaded method);
+            like exception {WebService::Qiita->$_; }, qr(exists delegaded method);
         }
 
         subtest undefined_method => sub {
-            like exception {Net::Qiita->nainai; }, qr(no such func);
+            like exception {WebService::Qiita->nainai; }, qr(no such func);
         }
     };
 };
