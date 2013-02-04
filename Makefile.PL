@@ -11,7 +11,6 @@ requires 'parent';  # for ver less than 5.10
 requires 'URI';
 
 tests 't/*.t';
-author_tests 'xt';
 
 test_requires 'Test::More';
 test_requires 'Test::Fatal';
@@ -23,5 +22,4 @@ test_requires 'HTTP::Response';
 test_requires 'Path::Class';
 
 auto_include;
-auto_set_repository;
 WriteAll;

@@ -19,8 +19,11 @@
 ^\.shipit$
 ^\.git/
 \.sw[po]$
+MYMETA
 ^examples
 \.shipit.*
 ^README.md$
 ^\.gitignore$
 ^t/00-dependencies.t$
+^local/
+^\.carton
