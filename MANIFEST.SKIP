@@ -27,3 +27,4 @@ MYMETA
 ^t/00-dependencies.t$
 ^local/
 ^\.carton
+^carton\.lock
